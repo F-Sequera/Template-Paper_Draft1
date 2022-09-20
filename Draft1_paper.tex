@@ -1,0 +1,114 @@
+
+\documentclass[eng]{ajceam-class}
+
+%
+% Publication Title
+\title{Analysis of a constraint’s impact that modifies the  dispatch in Mexico’s Electricity Market using a simplified Economic Dispatch model}
+
+% Short title for the header (copy the main title if it is not too long)
+\shorttitle{Author instructions for the AJCEAM}
+       
+% Authors
+\author[1]{Francisco Sequera}
+\author[2]{Thomas Morstyn}
+\author[3]{Iacopo Savelli}
+
+% Author Affiliations
+\affil[1]{University of Edinburgh, Edinburgh, UK}
+\affil[2]{University of Edinburgh, Energy Systems, Edinburgh, UKy}
+\affil[3]{University of Edinburgh,Energy Systems, Edinburgh, UK}
+
+% Surname of the first author of the manuscript
+\firstauthor{SurnameA, SurnameB and SurnameC}
+
+%Contact Author Information
+\contactauthor{Francisco Sequera}           % Name and surname of the contact author
+\email{s2187010@ed.ac.uk.com}            % Contact Author Email
+
+% Publication data (will be defined in the edition)
+\thisvolume{XX}
+\thisnumber{XX}
+\thismonth{Month}
+\thisyear{20XX}
+\receptiondate{dd/mm/aaaa}
+\acceptancedate{dd/mm/aaaa}
+\publicationdate{dd/mm/aaaa}
+
+% Place your particular definitions here
+\newcommand{\vect}[1]{\mathbf{#1}}  % vectors
+
+% Insert here the abstract in English language
+\abstract{
+In 2020, Mexico’s current administration proposed a constitutional reform initiative that was intended to benefit the power generation from the state-owned utility and change the current dispatch regime. Although this reform was not approved, it has had consequences, like United States requesting dispute settlement consultation under the USMCA about the actions made by Mexico. In this scenario, we considered necessary the development of studies that help us to model and understand the consequences of the proposed changes in the market. This paper addresses the impacts in the nodal prices in Mexico Electricity Market under the proposed policy, where it was stated that at least 54\%  of the power generation should be produced by the state. We developed a simplified model of the Economic Dispatch problem for Mexico Electricity Market with Python and Pyomo, where the definition of a new restriction was introduced to simulate the implementation of such policy. Results indicate that the addiction on the new restriction increase the total cost in the system, but interestingly, some nodal prices in the system had a significant reduction, which would seem counter-intuitive. This is due the mismatch between the the consumer’s marginal benefit and the marginal cost of the state-owned units.
+}
+
+% Insert here the keywords of your work in English language
+\keywords{
+Electricity market reform, Nodal Prices, Mexico, Economic Dispatch, Constraints
+}
+
+
+% Start document
+\begin{document}
+
+% Include title, authors, abstract, etc.
+\maketitle
+\thispagestyle{fancy}
+\printcontactdata
+
+% Main body of manuscript
+\section{Introduction}
+In Mexico, the electricity sector had a monopolized structure until 2014, when the Energy Reform was approved. This reform broke the monopoly of the vertically integrated state-owned utility the Federal Electricity Commission (CFE), and fully opened the generation market to private companies, additionally it created regulations to encourage the investment in transmission and distribution, and to accelerate the transition to clean energy [1]. 
+
+In December 2018, Mexican President Andrés Manuel López Obrador started its administra-tion, since then he had made some announcements related to the power sector, a key one is re-garding the strengthen of the national energy companies, CFE (electricity sector) and PEMEX (oil and gas sector). Additionally, this new administration cancelled the fourth long-term electricity auctions, which was an electricity market mechanism that reduced investment risk as generators could secure a stable income that enabled them to recover their variable and fixed cost, even when the electric utility was not yet built [2]. The reason given by the government was that CFE should build and operate its own power plants instead of depending on private players.
+
+Following this line, according to [3] on September 30, 2020, Mexican President submitted a constitutional reform initiative (New Electricity Reform) that was intended to fix the CFE’s par-ticipation in the market for at least 54\% of the total generation and change the current dispatch regime in favour of CFE units instead of the lowest-cost power generators [4]. The reasoning be-hind is that after the liberalisation of the market there was an increased in the electricity being produced by private generators, and the current government perceives this as a dangerous de-pendency on private and foreign companies. On April 17, 2022, during a tough debate on the New Electricity Reform before the House of Representatives, President López Obrador’s proposal did not reach the qualified majority necessary for its approval and it was dismissed [3].  
+
+In this kind of scenario, when the Mexican state seeks the approval of new policies that changes the rules in the electricity market and affects the generation mix, we considered necessary the development of tools that can help us model and understand the consequences of these changes. 
+
+This paper focuses on the results from a simplified model for the optimization of an Economic Dispatch (ED) problem, under the assumption that the new policy was approved, and this increases the participation of the state-owned units in the power system’s generation.
+
+In our analysis, we constructed a model of the Mexico power system using a system-wide, least-cost optimization framework. This approach is similar to the one developed by NREL in [5] and [6]. In our methodology, the model was run under two scenarios to have a comparison be-tween their results
+
+\section{Power infrastructure and energy policy in Mexico}
+\subsection{Mexican Power Infrastructure }
+
+As of 2021, Mexico had a total installed capacity of 86,153 MW with an annual generation of 328.598 TWh [7]. The installed capacity and generation mixes for Mexico are illustrated in Figure 2 1 and Figure 2 2, respectively. As can be seen in both figures, Mexico’s power system is domi-nated by fossil-fuel technologies, such as Combined Cycle and Traditional Thermal Units, in Mexico, the latter of these uses fuel oil or gas as their main fuel. Even though in recent years there has been a development of new renewable projects in the country, the capacity share of PV and Wind technologies accounted for only 7\% and 8\% of the total installed capacity in the system and both combined contributed with 11.8\% of the energy provided to the grid in 2021 [8]. However, when considering the rest of the clean technologies such as hydropower, bioenergy, geothermal and nuclear, the sum of the clean capacity represents 33\% of the total installed capacity, and the sum of all clean technologies generated 27.5\% of all generation in 2021. 
+
+INSERT Figure: Mexico installed capacity mix in 2021
+
+INSERT Figure: Mexico annual generation mix in 2021
+
+INSERT Figure: Installed Capacity by market players 
+
+\subsection{Mexico Energy Policy}
+
+President Andres Manuel Lopez is seeking to restore the dominance of the state in Mexico’s energy sector, and, from his perspective, this would minimize the corruption and level the playing field between the state and private companies [14]. The proposed New Energy Reform, which in fact was a constitutional amendment, intended to shift control of the power sector back to CFE, and move the current independent energy regulators back under the influence of the state. Under the new rules, CFE would have at least 54 percent of the power market and the system would no longer have to dispatch the lowest cost power first, but instead prioritize the state-owned units. This policy was proposed by the President in the context of a stronger momentum to favor state-run companies, including Mexico’s oil giant Pemex, in the energy sector [14].
+
+\section{Methodology}
+
+In this study, we employed the method of linear programming which is commonly used in the literature on electricity markets modelling [32]. Most of the models consider various time periods since they include the Unit Commitment problem in their formulation; however, because our main purpose is only to try to model the impact of a policy that gives priority to the state power plants, we decided to simulate a simplified version of an Economic Dispatch (ED) problem for the Mexican Wholesale Electricity Market. 
+
+As mentioned in SECTION1, most of the generation in Mexico’s power system is provided by fossil-fuel fired technologies [7]. We decided to group the following technologies: Coal-fired, Combined Cycle, Traditional Thermal Power, Turbogas and Internal Combustion, in just one category which we termed as Thermal Units. Concerning the power units from Bio-energy, Co-generation, Geothermal and Run of River, these units will feature in the model as Not Dispatch-able Technologies, which means their generation will be fixed. The generation of wind and PV, considers a possible curtailment and a capacity factor would be used to determine the maximum possible output of every unit for these technologies. Finally, for Reservoir hydro-power, given the not temporality approach of our model, the economic dispatch of this technology would consider a cost of water as the marginal cost for every unit that belonging to this category; we took the ad-vantage that historical data of these cost can be provided by CENACE [33] for every unit in a Reservoir hydro-power plant. Moreover, in this study we will refer to this kind of units as Hydro Unit for simplicity.
+
+In our model, to help us distinguish the units in the dispatch process we assigned an indicator with a value of 1 for all state-owned units and 0 for the private units in the power unit inventory. Additionally, we are assuming that under the hypothesis of perfect competition, the marginal costs and nodal prices can be estimated via an optimisation program, in which the cost of the system is minimized, subject to technical constrains, as mentioned in Chapter 2, though in our case there is an additional restriction that set the participation of the state-owned units in the system.
+
+\subsection{Mathematical formulation}
+
+In an optimization problem we are looking for the precise solution from a range of existing solutions that fulfils the conditions from a specific and established point of view [34]. In our thesis, as in any simple ED problem, the objective is to find out for a single period of time the output power of every generating unit so that all demand is satisfied at minimum cost, while complying with the different technical constraints of the grid and the generating units [19]. In our model, the objective function considers only the operational costs and is then given by:
+
+INSERT FORMULAS
+
+\subsection{Inputs}
+
+\subsection{Python and Pyomo}
+
+
+\section{Results}
+Focus on \textbf{Nodal Prices}
+
+
+% Include references
+%\insertbibliography{References}
+
+\end{document}
